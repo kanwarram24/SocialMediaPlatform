@@ -8,7 +8,7 @@ class Database {
     connect()
     {
         
-mongoose.connect("mongodb://localhost:27017/SocialMediaPlatform")
+mongoose.connect("mongodb://localhost:27017/social")
 .then(()=>{
     console.log("Database connection")
 })

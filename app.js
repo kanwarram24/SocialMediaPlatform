@@ -1,35 +1,39 @@
-const express  = require("express")
+const express = require('express');
 const app = express();
-const port = 3000;
-const middleware = require("./middleware")
+const port = 5000;
+const middleware = require('./middleware')
 const path = require('path')
-const bodyParser = require("body-parser");
-const mongoose =require('./database')
+const bodyParser = require("body-parser")
+const mongoose = require("./database");
+const session = require("express-session");
 
-const server = app.listen(port,()=>console.log("Server started on port:",port))
+const server = app.listen(port, () => console.log("Server listening on port " + port));
 
-app.set("view engine","pug")
-app.set("views","views");
+app.set("view engine", "pug");
+app.set("views", "views");
 
-app.use(bodyParser.urlencoded({
-    extended:false
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, "public")));
+
+app.use(session({
+    secret: "bbq chips",
+    resave: true,
+    saveUninitialized: false
 }))
-app.use(express.static(path.join(__dirname,"public")))
 
-// All the Routes are here
+// Routes
+const loginRoute = require('./routes/loginRoutes');
 const registerRoute = require('./routes/registerRoutes');
-const loginRoute = require("./routes/loginRoutes");
 
-app.use("/login",loginRoute);
-app.use("/register",registerRoute)
-app.use(bodyParser.urlencoded({
-    extended:false
-}))
+app.use("/login", loginRoute);
+app.use("/register", registerRoute);
 
-app.get("/", middleware.requireLogin,(req,res)=>{
+app.get("/", middleware.requireLogin, (req, res, next) => {
 
     var payload = {
-        pageTitle:"Home"
+        pageTitle: "Home",
+        userLoggedIn:req.session.user
     }
-    res.status(200).render("home",payload)
+
+    res.status(200).render("home", payload);
 })
