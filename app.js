@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({
 }))
 app.use(express.static(path.join(__dirname,"public")))
 
-// Routes
+// All the Routes are here
 const registerRoute = require('./routes/registerRoutes');
 const loginRoute = require("./routes/loginRoutes");
 
